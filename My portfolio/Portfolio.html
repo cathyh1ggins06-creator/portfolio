@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✦ Caitlin Higgins ✦ — Dev Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Pixelify+Sans:wght@400;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       GLOBAL RESET & CSS VARIABLES
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:       #ff6eb4;
+      --hot-pink:   #ff2d78;
+      --pale-pink:  #ffd6ec;
+      --lavender:   #c9a0ff;
+      --cyan:       #00f5d4;
+      --yellow:     #ffe66d;
+      --dark:       #0d0010;
+      --dark-2:     #180022;
+      --dark-3:     #270038;
+      --panel:      rgba(255, 110, 180, 0.08);
+      --border:     rgba(255, 110, 180, 0.35);
+      --text:       #fce8f5;
+      --text-dim:   #c9a0cc;
+      --font-pixel: 'VT323', monospace;
+      --font-cute:  'Pixelify Sans', monospace;
+      --font-body:  'Nunito', sans-serif;
+      --glow-pink:  0 0 12px rgba(255,110,180,0.7), 0 0 30px rgba(255,45,120,0.4);
+      --glow-cyan:  0 0 12px rgba(0,245,212,0.7), 0 0 30px rgba(0,245,212,0.3);
+      --glow-lav:   0 0 12px rgba(201,160,255,0.7), 0 0 30px rgba(201,160,255,0.3);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='4' cy='4' r='3' fill='%23ff6eb4'/%3E%3C/svg%3E") 4 4, auto;
+    }
+
+    /* ============================================================
+       ANIMATED BG — SCANLINES + STAR PARTICLES
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(255,110,180,0.03) 2px,
+          rgba(255,110,180,0.03) 4px
+        );
+      pointer-events: none;
+    }
+
+    #stars-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 2.5rem;
+      background: rgba(13,0,16,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-cute);
+      font-size: 1.3rem;
+      color: var(--pink);
+      text-shadow: var(--glow-pink);
+      text-decoration: none;
+      letter-spacing: 2px;
+    }
+    .nav-logo span { color: var(--cyan); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--font-pixel);
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: color .2s, text-shadow .2s;
+    }
+    .nav-links a:hover { color: var(--pink); text-shadow: var(--glow-pink); }
+
+    .nav-toggle {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer;
+      background: none; border: none; padding: 4px;
+    }
+    .nav-toggle span {
+      width: 22px; height: 2px; background: var(--pink);
+      border-radius: 2px; transition: .3s;
+    }
+
+    /* ============================================================
+       VISUAL NOVEL DIALOG HELPER
+    ============================================================ */
+    .vn-box {
+      background: rgba(13,0,16,0.92);
+      border: 2px solid var(--pink);
+      border-radius: 4px;
+      padding: 1rem 1.4rem;
+      position: relative;
+      box-shadow: var(--glow-pink);
+      font-family: var(--font-body);
+    }
+    .vn-box::before {
+      content: '▶';
+      position: absolute; bottom: 0.5rem; right: 0.8rem;
+      color: var(--pink); font-size: 0.7rem;
+      animation: blink 1s step-end infinite;
+    }
+    .vn-name-tag {
+      display: inline-block;
+      background: var(--hot-pink);
+      color: #fff;
+      font-family: var(--font-cute);
+      font-size: 0.8rem;
+      padding: 2px 10px;
+      margin-bottom: 0.4rem;
+      letter-spacing: 1px;
+      clip-path: polygon(0 0,calc(100% - 8px) 0,100% 50%,calc(100% - 8px) 100%,0 100%);
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ============================================================
+       SHARED SECTION STYLES
+    ============================================================ */
+    section { position: relative; z-index: 1; padding: 5rem 2rem; }
+
+    .section-label {
+      font-family: var(--font-pixel);
+      font-size: 0.95rem;
+      letter-spacing: 4px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      text-shadow: var(--glow-cyan);
+    }
+    h2.section-title {
+      font-family: var(--font-cute);
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--pale-pink);
+      margin-bottom: 2.5rem;
+      line-height: 1.1;
+    }
+    h2.section-title span { color: var(--pink); text-shadow: var(--glow-pink); }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding-top: 5rem;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 80%, rgba(255,45,120,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(201,160,255,0.1) 0%, transparent 60%);
+    }
+
+    .hero-inner {
+      display: flex; flex-direction: column; align-items: center; gap: 1.8rem;
+      max-width: 700px;
+    }
+
+    /* Profile image — cute circular frame */
+    .profile-frame {
+      position: relative;
+      width: 160px; height: 160px;
+    }
+    .profile-frame::before,
+    .profile-frame::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      animation: spin 6s linear infinite;
+    }
+    .profile-frame::before {
+      inset: -6px;
+      border: 3px dashed var(--pink);
+      opacity: 0.7;
+    }
+    .profile-frame::after {
+      inset: -14px;
+      border: 2px dotted var(--lavender);
+      animation-direction: reverse;
+      animation-duration: 9s;
+      opacity: 0.4;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .profile-img {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--pink);
+      box-shadow: var(--glow-pink);
+      background: linear-gradient(135deg, var(--dark-3), #3a005a);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    /* Placeholder avatar for when no real image is set */
+    .avatar-placeholder {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3a005a, #1a0030);
+      border: 4px solid var(--pink);
+      box-shadow: var(--glow-pink);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+    }
+
+    .star-burst {
+      position: absolute; top: -8px; right: -8px;
+      color: var(--yellow); font-size: 1.5rem;
+      animation: bounce-star 1.2s ease-in-out infinite alternate;
+      text-shadow: 0 0 10px rgba(255,230,109,0.8);
+    }
+    @keyframes bounce-star { to { transform: scale(1.3) rotate(20deg); } }
+
+    .hero-badges {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;
+    }
+    .badge {
+      font-family: var(--font-pixel);
+      font-size: 0.85rem;
+      padding: 3px 12px;
+      border-radius: 2px;
+      letter-spacing: 1px;
+    }
+    .badge-pink  { background: rgba(255,110,180,0.15); border: 1px solid var(--pink);     color: var(--pink);     }
+    .badge-cyan  { background: rgba(0,245,212,0.12);   border: 1px solid var(--cyan);     color: var(--cyan);     }
+    .badge-lav   { background: rgba(201,160,255,0.12); border: 1px solid var(--lavender); color: var(--lavender); }
+    .badge-yellow{ background: rgba(255,230,109,0.12); border: 1px solid var(--yellow);   color: var(--yellow);   }
+
+    h1.hero-name {
+      font-family: var(--font-cute);
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      line-height: 1;
+      color: var(--pale-pink);
+    }
+    h1.hero-name .glow-name { color: var(--pink); text-shadow: var(--glow-pink); }
+
+    .hero-title {
+      font-family: var(--font-pixel);
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: var(--cyan);
+      letter-spacing: 3px;
+      text-shadow: var(--glow-cyan);
+    }
+
+    /* Typing cursor */
+    .typing-cursor::after {
+      content: '▮';
+      animation: blink 0.8s step-end infinite;
+      color: var(--pink);
+    }
+
+    .hero-ctas {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      font-family: var(--font-cute);
+      font-size: 1rem;
+      letter-spacing: 1px;
+      padding: 0.6rem 1.6rem;
+      border-radius: 3px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { transform: translateY(-2px) scale(1.03); }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--hot-pink);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(255,45,120,0.5);
+      border-color: var(--pink);
+    }
+    .btn-primary:hover { box-shadow: var(--glow-pink); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0,245,212,0.2);
+    }
+    .btn-outline:hover { box-shadow: var(--glow-cyan); background: rgba(0,245,212,0.08); }
+
+    /* ============================================================
+       ABOUT
+    ============================================================ */
+    #about { background: radial-gradient(ellipse 70% 50% at 10% 50%, rgba(201,160,255,0.07) 0%, transparent 70%); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    @media (max-width: 700px) { .about-grid { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem;
+      backdrop-filter: blur(6px);
+    }
+
+    .skills-grid {
+      display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem;
+    }
+    .skill-chip {
+      font-family: var(--font-pixel);
+      font-size: 0.9rem;
+      padding: 4px 14px;
+      border-radius: 2px;
+      letter-spacing: 1px;
+      transition: box-shadow .2s, transform .2s;
+      cursor: default;
+    }
+    .skill-chip:hover { transform: scale(1.08); }
+    .chip-html   { background: rgba(255,90,40,0.15);  border: 1px solid #ff5a28; color: #ff8c6a; }
+    .chip-css    { background: rgba(38,130,255,0.15); border: 1px solid #2682ff; color: #6aadff; }
+    .chip-js     { background: rgba(255,220,0,0.15);  border: 1px solid #ffdc00; color: #ffe44d; }
+    .chip-py     { background: rgba(55,220,90,0.15);  border: 1px solid #37dc5a; color: #72f093; }
+    .chip-sql    { background: rgba(0,200,220,0.15);  border: 1px solid #00c8dc; color: #4de0f0; }
+    .chip-java   { background: rgba(255,80,80,0.15);  border: 1px solid #ff5050; color: #ff8888; }
+    .chip-git    { background: rgba(255,110,180,0.15);border: 1px solid var(--pink); color: var(--pink); }
+    .chip-learn  { background: rgba(201,160,255,0.15);border: 1px solid var(--lavender); color: var(--lavender); }
+
+    /* ============================================================
+       PROJECTS
+    ============================================================ */
+    #projects {
+      background: radial-gradient(ellipse 60% 50% at 90% 50%, rgba(255,45,120,0.08) 0%, transparent 70%);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.4rem;
+      position: relative;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--lavender), var(--cyan));
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(255,110,180,0.2);
+      border-color: var(--pink);
+    }
+    .project-card.featured { border-color: var(--pink); box-shadow: 0 0 20px rgba(255,110,180,0.15); }
+    .project-card.featured::before { height: 4px; }
+
+    .status-badge {
+      display: inline-block;
+      font-family: var(--font-pixel);
+      font-size: 0.75rem;
+      padding: 2px 10px;
+      border-radius: 2px;
+      letter-spacing: 1px;
+      margin-bottom: 0.6rem;
+    }
+    .status-completed  { background: rgba(55,220,90,0.15);  border: 1px solid #37dc5a; color: #72f093; }
+    .status-progress   { background: rgba(255,220,0,0.15);  border: 1px solid #ffdc00; color: #ffe44d; }
+    .status-soon       { background: rgba(201,160,255,0.15);border: 1px solid var(--lavender); color: var(--lavender); }
+
+    .project-title {
+      font-family: var(--font-cute);
+      font-size: 1.2rem;
+      color: var(--pale-pink);
+      margin-bottom: 0.5rem;
+    }
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+    .tech-tag {
+      font-family: var(--font-pixel);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      background: rgba(255,110,180,0.1);
+      border: 1px solid rgba(255,110,180,0.3);
+      color: var(--pink);
+      letter-spacing: 1px;
+    }
+    .project-links { display: flex; gap: 0.8rem; }
+    .project-links a {
+      font-family: var(--font-pixel);
+      font-size: 0.85rem;
+      color: var(--cyan);
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: text-shadow .2s;
+    }
+    .project-links a:hover { text-shadow: var(--glow-cyan); }
+
+    /* ============================================================
+       TIMELINE
+    ============================================================ */
+    #journey {
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201,160,255,0.07) 0%, transparent 60%);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      border-left: 2px solid var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+    .timeline-item::before {
+      content: '◆';
+      position: absolute; left: -2.05rem; top: 0.1rem;
+      color: var(--pink);
+      font-size: 0.9rem;
+      text-shadow: var(--glow-pink);
+    }
+    .timeline-date {
+      font-family: var(--font-pixel);
+      font-size: 0.85rem;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      text-shadow: var(--glow-cyan);
+      margin-bottom: 0.2rem;
+    }
+    .timeline-title {
+      font-family: var(--font-cute);
+      font-size: 1.05rem;
+      color: var(--pale-pink);
+      margin-bottom: 0.2rem;
+    }
+    .timeline-desc { font-size: 0.88rem; color: var(--text-dim); }
+
+    /* ============================================================
+       GITHUB SECTION
+    ============================================================ */
+    #github { background: linear-gradient(180deg, transparent, rgba(255,45,120,0.05) 50%, transparent); }
+
+    .github-panel {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 700px) { .github-panel { grid-template-columns: 1fr; } }
+
+    .github-profile-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .github-avatar {
+      font-size: 3.5rem; margin-bottom: 0.5rem;
+    }
+    .github-handle {
+      font-family: var(--font-pixel);
+      font-size: 1.1rem;
+      color: var(--pink);
+      text-shadow: var(--glow-pink);
+    }
+    .repo-placeholder {
+      background: var(--panel);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 0.8rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .repo-name {
+      font-family: var(--font-pixel);
+      color: var(--cyan);
+      font-size: 0.95rem;
+      text-shadow: var(--glow-cyan);
+    }
+    .repo-lang {
+      font-family: var(--font-pixel);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    #contact { background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(255,45,120,0.1) 0%, transparent 70%); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 700px) { .contact-grid { grid-template-columns: 1fr; } }
+
+    .contact-info { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-link {
+      display: flex; align-items: center; gap: 0.8rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      text-decoration: none;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .contact-link:hover { border-color: var(--pink); box-shadow: 0 0 12px rgba(255,110,180,0.2); }
+    .contact-link .icon { font-size: 1.3rem; }
+    .contact-link .label { font-family: var(--font-pixel); font-size: 0.8rem; color: var(--pink); }
+
+    /* Contact Form */
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-group label {
+      font-family: var(--font-pixel);
+      font-size: 0.85rem;
+      color: var(--pink);
+      letter-spacing: 1px;
+    }
+    .form-group input,
+    .form-group textarea {
+      background: rgba(255,110,180,0.06);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.6rem 0.8rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 10px rgba(255,110,180,0.25);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--text-dim); opacity: 0.6; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-pixel);
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+    }
+    footer span { color: var(--pink); }
+
+    /* ============================================================
+       DECORATIVE PIXEL HEARTS & STARS
+    ============================================================ */
+    .deco {
+      position: absolute;
+      pointer-events: none;
+      animation: float 4s ease-in-out infinite alternate;
+      opacity: 0.4;
+      font-size: 1.2rem;
+      z-index: 0;
+      user-select: none;
+    }
+    @keyframes float {
+      from { transform: translateY(0) rotate(-5deg); }
+      to   { transform: translateY(-12px) rotate(5deg); }
+    }
+
+    /* ============================================================
+       SCROLL FADE-IN
+    ============================================================ */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* ============================================================
+       RESPONSIVE NAV
+    ============================================================ */
+    @media (max-width: 600px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: rgba(13,0,16,0.97);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        gap: 1rem;
+      }
+      .nav-links.open { display: flex; }
+      .nav-toggle { display: flex; }
+    }
+
+    /* ============================================================
+       DARK/LIGHT MODE TOGGLE (optional)
+    ============================================================ */
+    .theme-btn {
+      font-family: var(--font-pixel);
+      font-size: 0.8rem;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 3px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: .2s;
+      letter-spacing: 1px;
+    }
+    .theme-btn:hover { border-color: var(--pink); color: var(--pink); }
+
+    /* Small utility */
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    p { color: var(--text-dim); line-height: 1.7; }
+  </style>
+</head>
+
+<body>
+
+<!-- ====================== STAR CANVAS ====================== -->
+<canvas id="stars-canvas"></canvas>
+
+<!-- ====================== NAVBAR ====================== -->
+<nav>
+  <a class="nav-logo" href="#hero">✦ <span>C</span>aitlin<span>H</span>iggins ✦</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#github">GitHub</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div style="display:flex;gap:0.8rem;align-items:center;">
+    <button class="theme-btn" onclick="toggleTheme()" title="Toggle light mode">☀ LIGHT</button>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ====================== HERO ====================== -->
+<section id="hero">
+  <!-- Decorative floaty elements -->
+  <span class="deco" style="top:15%;left:8%;animation-delay:.3s">♡</span>
+  <span class="deco" style="top:25%;right:10%;animation-delay:1s;font-size:1.6rem">✦</span>
+  <span class="deco" style="bottom:20%;left:14%;animation-delay:2s">✿</span>
+  <span class="deco" style="bottom:30%;right:8%;animation-delay:.7s">♡</span>
+  <span class="deco" style="top:60%;right:20%;animation-delay:1.5s;font-size:0.9rem">◆</span>
+
+  <div class="hero-inner">
+
+    <!-- Profile -->
+    <div class="profile-frame">
+      <div class="avatar-placeholder">🌸</div>
+      <span class="star-burst">★</span>
+    </div>
+
+    <!-- Badges -->
+    <div class="hero-badges">
+      <span class="badge badge-pink">2ND YEAR DEV</span>
+      <span class="badge badge-cyan">FULL-STACK STUDENT</span>
+      <span class="badge badge-lav">GAMING NERD ♡</span>
+      <span class="badge badge-yellow">LEVEL UP ↑</span>
+    </div>
+
+    <!-- Name & title -->
+    <h1 class="hero-name">
+      Hi, I'm <span class="glow-name" id="typed-name">Caitlin</span>
+    </h1>
+    <p class="hero-title typing-cursor" id="hero-subtitle">Software Development Student</p>
+
+    <!-- VN Dialog box -->
+    <div class="vn-box" style="max-width:520px;text-align:left;">
+      <div class="vn-name-tag">Caitlin</div>
+      <p style="color:var(--text);font-size:0.95rem;">
+        Welcome to my world! ♡ I'm a 2nd-year Software Development student with a passion
+        for building cool things, levelling up my skills, and turning ideas into reality —
+        one line of code at a time. Currently unlocking: Full-Stack Dev achievement! 🎮
+      </p>
+    </div>
+
+    <!-- CTAs -->
+    <div class="hero-ctas">
+      <a href="#projects" class="btn btn-primary">▶ View Projects</a>
+      <a href="#contact" class="btn btn-outline">✉ Contact Me</a>
+      <a href="#" class="btn btn-outline" onclick="alert('Link your CV here! 📄')">📄 Download CV</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====================== ABOUT ====================== -->
+<section id="about">
+  <div class="container">
+    <div class="section-label fade-in">// PLAYER INFO</div>
+    <h2 class="section-title fade-in">About <span>Me</span></h2>
+
+    <div class="about-grid">
+
+      <!-- Story panel -->
+      <div class="panel fade-in">
+        <div class="vn-name-tag">STORY</div>
+        <p class="mt-1">
+          I'm a 2nd-year Software Development student who started this journey in 2024.
+          I love the creative side of coding — building interfaces that feel alive, playing
+          with colours and logic, and debugging at 2am with snacks. 🍩
+        </p>
+        <p class="mt-1">
+          When I'm not coding, you'll find me gaming, exploring tech communities online,
+          or planning my next big project. My goal? To become a full-stack developer
+          who builds apps that actually make life more fun.
+        </p>
+        <p class="mt-1" style="color:var(--pink);font-family:var(--font-pixel);font-size:0.85rem;letter-spacing:1px;">
+          ★ CAREER GOAL: Junior Full-Stack Front-end Developer or Game designer ★
+        </p>
+      </div>
+
+      <!-- Skills panel -->
+      <div class="panel fade-in">
+        <div class="vn-name-tag">SKILL TREE</div>
+        <div class="skills-grid mt-1">
+          <span class="skill-chip chip-html">HTML</span>
+          <span class="skill-chip chip-css">CSS</span>
+          <span class="skill-chip chip-js">JavaScript</span>
+          <span class="skill-chip chip-py">Python</span>
+          <span class="skill-chip chip-sql">SQL</span>
+          <span class="skill-chip chip-java">Java</span>
+          <span class="skill-chip chip-git">Git & GitHub</span>
+          <span class="skill-chip chip-learn">React ← Learning</span>
+          <span class="skill-chip chip-learn">Node.js ← Next</span>
+        </div>
+        <p class="mt-2" style="font-family:var(--font-pixel);font-size:0.8rem;color:var(--text-dim);letter-spacing:1px;">
+          🎮 CURRENTLY PLAYING: Full-Stack Dev Simulator
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====================== PROJECTS ====================== -->
+<section id="projects">
+  <div class="container">
+    <div class="section-label fade-in">// QUEST LOG</div>
+    <h2 class="section-title fade-in">My <span>Projects</span></h2>
+
+    <div class="projects-grid">
+
+      <!-- Featured project -->
+      <div class="project-card featured fade-in">
+        <span class="status-badge status-completed">★ COMPLETED</span>
+        <div class="project-title">✦ This Portfolio Website</div>
+        <div class="project-desc">
+          A custom-built personal portfolio with a Y2K visual novel theme, animated UI,
+          and responsive layout. Built from scratch with pure HTML, CSS & JS.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">HTML</span>
+          <span class="tech-tag">CSS</span>
+          <span class="tech-tag">JavaScript</span>
+        </div>
+        <div class="project-links">
+          <a href="https://github.com/" target="_blank">⬡ GitHub</a>
+          <a href="#" target="_blank">↗ Live Demo</a>
+        </div>
+      </div>
+
+      <!-- In progress -->
+      <div class="project-card fade-in">
+        <span class="status-badge status-progress">⧖ IN PROGRESS</span>
+        <div class="project-title">✿ Study Planner App</div>
+        <div class="project-desc">
+          A web app for tracking assignments, deadlines, and study sessions with
+          a cute aesthetic UI. Currently building out the calendar feature.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">CSS</span>
+          <span class="tech-tag">LocalStorage</span>
+        </div>
+        <div class="project-links">
+          <a href="https://github.com/" target="_blank">⬡ GitHub</a>
+        </div>
+      </div>
+
+      <!-- Coming soon 1 -->
+      <div class="project-card fade-in">
+        <span class="status-badge status-soon">◈ COMING SOON</span>
+        <div class="project-title">♡ Recipe Finder App</div>
+        <div class="project-desc">
+          Currently working on exciting software development projects.
+          A React-powered recipe search app with favourites & filters. More coming soon!
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">API</span>
+          <span class="tech-tag">CSS</span>
+        </div>
+        <div class="project-links">
+          <a href="#" style="color:var(--text-dim);cursor:default;">⬡ Not yet live</a>
+        </div>
+      </div>
+
+      <!-- Coming soon 2 -->
+      <div class="project-card fade-in">
+        <span class="status-badge status-soon">◈ COMING SOON</span>
+        <div class="project-title">◆ Pixel Art Generator</div>
+        <div class="project-desc">
+          A browser-based pixel art drawing tool with colour palettes,
+          export, and a kawaii theme. Currently in the design phase!
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">HTML Canvas</span>
+          <span class="tech-tag">JavaScript</span>
+        </div>
+        <div class="project-links">
+          <a href="#" style="color:var(--text-dim);cursor:default;">⬡ Building soon</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====================== TIMELINE ====================== -->
+<section id="journey">
+  <div class="container">
+    <div class="section-label fade-in">// LEVEL HISTORY</div>
+    <h2 class="section-title fade-in">Learning <span>Journey</span></h2>
+
+    <div class="timeline fade-in">
+
+      <div class="timeline-item">
+        <div class="timeline-date">2025 — YEAR 1</div>
+        <div class="timeline-title">✦ Started Software Development Studies</div>
+        <div class="timeline-desc">
+          Enrolled in my Software Development course. First encounters with HTML, CSS,
+          Python, and Java. Discovered I actually love this! 🎉
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date">2025— SEMESTER 2</div>
+        <div class="timeline-title">✿ First Coding Projects</div>
+        <div class="timeline-desc">
+          Built my first static websites and Python scripts as part of coursework.
+          Fell in love with CSS animations and visual design.
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date">2026 — YEAR 2 (NOW)</div>
+        <div class="timeline-title">★ Currently: 2nd Year Dev Journey</div>
+        <div class="timeline-desc">
+          Diving deeper into JavaScript, SQL databases, and starting to learn React.
+          Building personal projects and growing my GitHub portfolio!
+        </div>
+      </div>
+
+      <div class="timeline-item" style="opacity:0.55;">
+        <div class="timeline-date">FUTURE ← LOADING...</div>
+        <div class="timeline-title">◈ Junior Developer Role</div>
+        <div class="timeline-desc">
+          Hackathons, internships, certifications, and exciting new projects — this
+          chapter is still being written! ♡
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====================== GITHUB ====================== -->
+<section id="github">
+  <div class="container">
+    <div class="section-label fade-in">// SOURCE CODE</div>
+    <h2 class="section-title fade-in"><span>GitHub</span> Hub</h2>
+
+    <div class="github-panel fade-in">
+
+      <div class="github-profile-card">
+        <div class="github-avatar">🐱</div>
+        <div class="github-handle">@cathyh1ggins06</div>
+        <p class="mt-1" style="font-size:0.85rem;">All my code lives here ✦</p>
+        <a href="https://github.com/" target="_blank" class="btn btn-primary mt-2" style="display:inline-block;margin-top:1rem;">
+          ↗ Visit Profile
+        </a>
+      </div>
+
+      <div>
+        <p style="font-family:var(--font-pixel);font-size:0.85rem;color:var(--text-dim);letter-spacing:1px;margin-bottom:1rem;">
+          ◆ RECENT REPOSITORIES
+        </p>
+        <div class="repo-placeholder">
+          <span class="repo-name">portfolio-website</span>
+          <span class="repo-lang">HTML / CSS</span>
+        </div>
+        <div class="repo-placeholder">
+          <span class="repo-name">study-planner-app</span>
+          <span class="repo-lang">JavaScript</span>
+        </div>
+        <div class="repo-placeholder">
+          <span class="repo-name">python-exercises</span>
+          <span class="repo-lang">Python</span>
+        </div>
+        <div class="repo-placeholder" style="border-style:dashed;opacity:0.5;">
+          <span class="repo-name" style="color:var(--text-dim);">more projects loading...</span>
+          <span class="repo-lang">✦ soon</span>
+        </div>
+
+        <!-- GitHub Stats Card via github-readme-stats -->
+        <!-- 
+          OPTIONAL: Replace YourHandle below with your actual GitHub username!
+          You can uncomment this block to show live stats.
+        
+        <img
+          src="https://github-readme-stats.vercel.app/api?username=YourHandle&show_icons=true&theme=radical&hide_border=true&bg_color=0d0010&title_color=ff6eb4&icon_color=c9a0ff&text_color=fce8f5"
+          alt="GitHub Stats"
+          style="width:100%;border-radius:6px;margin-top:1rem;"
+        />
+        -->
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====================== CONTACT ====================== -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label fade-in">// SEND MESSAGE</div>
+    <h2 class="section-title fade-in">Contact <span>Me</span></h2>
+
+    <div class="contact-grid fade-in">
+
+      <div class="contact-info">
+        <a href="mailto:you@email.com" class="contact-link">
+          <span class="icon">✉</span>
+          <div>
+            <div class="label">EMAIL</div>
+            <div>cathyh1ggins06@gmail.com</div>
+          </div>
+        </a>
+        <a href="https://linkedin.com/" target="_blank" class="contact-link">
+          <span class="icon">💼</span>
+          <div>
+            <div class="label">LINKEDIN</div>
+            <div>Your LinkedIn</div>
+          </div>
+        </a>
+        <a href="https://github.com/" target="_blank" class="contact-link">
+          <span class="icon">🐱</span>
+          <div>
+            <div class="label">GITHUB</div>
+            <div>@cathyh1ggins06</div>
+          </div>
+        </a>
+        <div class="vn-box mt-2" style="border-color:var(--lavender);">
+          <div class="vn-name-tag" style="background:var(--lavender);color:#1a0030;">NOTE</div>
+          <p style="color:var(--text);font-size:0.88rem;margin-top:0.3rem;">
+            I'm always open to learning opportunities, collabs, and friendly messages ♡
+            Don't be shy — say hello!
+          </p>
+        </div>
+      </div>
+
+      <!-- Contact form (UI only — no backend) -->
+      <div class="panel">
+        <p style="font-family:var(--font-pixel);font-size:0.85rem;color:var(--pink);letter-spacing:1px;margin-bottom:1rem;">
+          ◆ SEND A MESSAGE
+        </p>
+        <div class="contact-form" id="contact-form">
+          <div class="form-group">
+            <label for="cf-name">NAME</label>
+            <input type="text" id="cf-name" placeholder="Your name..." />
+          </div>
+          <div class="form-group">
+            <label for="cf-email">EMAIL</label>
+            <input type="email" id="cf-email" placeholder="your@email.com" />
+          </div>
+          <div class="form-group">
+            <label for="cf-msg">MESSAGE</label>
+            <textarea id="cf-msg" rows="5" placeholder="Say something cute... ♡"></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="handleFormSubmit()">✦ Send Message</button>
+          <div id="form-success" style="display:none;font-family:var(--font-pixel);font-size:0.85rem;color:#72f093;letter-spacing:1px;margin-top:0.5rem;">
+            ✓ MESSAGE RECEIVED — I'll reply soon! ♡
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====================== FOOTER ====================== -->
+<footer>
+  <p>✦ Made with <span>♡</span> & lots of caffeine by <span>Your Name</span> — 2025 ✦</p>
+  <p style="margin-top:0.3rem;font-size:0.75rem;opacity:0.5;">SOFT DEV STUDENT // LEVEL 2 IN PROGRESS</p>
+</footer>
+
+<!-- ====================== SCRIPTS ====================== -->
+<script>
+  /* ---- Star / particle canvas ---- */
+  (function() {
+    const canvas = document.getElementById('stars-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+    const COLORS = ['#ff6eb4','#c9a0ff','#00f5d4','#ffe66d','#ffd6ec'];
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    function Particle() {
+      this.reset = function() {
+        this.x  = Math.random() * W;
+        this.y  = Math.random() * H;
+        this.r  = Math.random() * 1.5 + 0.3;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.alpha = Math.random() * 0.7 + 0.1;
+        this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+        this.twinkle = Math.random() * 0.02 + 0.005;
+        this.dir = Math.random() > 0.5 ? 1 : -1;
+      };
+      this.reset();
+    }
+
+    function init() {
+      resize();
+      particles = Array.from({length: 160}, () => new Particle());
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => {
+        p.alpha += p.twinkle * p.dir;
+        if (p.alpha > 0.8 || p.alpha < 0.05) p.dir *= -1;
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    init();
+    draw();
+  })();
+
+  /* ---- Typing effect on hero subtitle ---- */
+  (function() {
+    const el = document.getElementById('hero-subtitle');
+    const phrases = [
+      'Software Development Student',
+      'Aspiring Full-Stack Dev ♡',
+      'UI/UX Curious 🎨',
+      'Gamer & Code Witch ✦',
+      'Level 2 Unlocked! 🎮'
+    ];
+    let pi = 0, ci = 0, deleting = false;
+    function tick() {
+      const phrase = phrases[pi];
+      if (!deleting) {
+        el.textContent = phrase.slice(0, ci + 1);
+        ci++;
+        if (ci === phrase.length) { deleting = true; setTimeout(tick, 2200); return; }
+      } else {
+        el.textContent = phrase.slice(0, ci - 1);
+        ci--;
+        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+      }
+      setTimeout(tick, deleting ? 45 : 75);
+    }
+    tick();
+  })();
+
+  /* ---- Scroll fade-in ---- */
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  fadeEls.forEach(el => obs.observe(el));
+
+  /* ---- Mobile nav toggle ---- */
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    document.getElementById('nav-links').classList.toggle('open');
+  });
+
+  /* ---- Contact form (UI only) ---- */
+  function handleFormSubmit() {
+    const name  = document.getElementById('cf-name').value.trim();
+    const email = document.getElementById('cf-email').value.trim();
+    const msg   = document.getElementById('cf-msg').value.trim();
+    if (!name || !email || !msg) {
+      alert('Please fill in all fields ♡');
+      return;
+    }
+    document.getElementById('form-success').style.display = 'block';
+    document.getElementById('cf-name').value = '';
+    document.getElementById('cf-email').value = '';
+    document.getElementById('cf-msg').value = '';
+  }
+
+  /* ---- Light mode toggle ---- */
+  function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const btn = document.querySelector('.theme-btn');
+    btn.textContent = document.body.classList.contains('light-mode') ? '☾ DARK' : '☀ LIGHT';
+  }
+
+  /* ---- Cursor sparkle trail ---- */
+  document.addEventListener('mousemove', e => {
+    if (Math.random() > 0.65) return; // throttle
+    const spark = document.createElement('span');
+    spark.textContent = ['✦','♡','✿','★','◆'][Math.floor(Math.random()*5)];
+    spark.style.cssText = `
+      position:fixed;left:${e.clientX - 8}px;top:${e.clientY - 8}px;
+      pointer-events:none;z-index:9999;font-size:${Math.random()*10+8}px;
+      color:${['#ff6eb4','#c9a0ff','#00f5d4','#ffe66d'][Math.floor(Math.random()*4)]};
+      animation:spark-fade .7s forwards;
+    `;
+    document.body.appendChild(spark);
+    setTimeout(() => spark.remove(), 700);
+  });
+</script>
+
+<!-- Sparkle fade keyframe injected dynamically -->
+<style>
+@keyframes spark-fade {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to   { opacity: 0; transform: scale(0.3) translateY(-20px); }
+}
+
+/* ---- Light mode overrides ---- */
+body.light-mode {
+  --dark:       #fff0f7;
+  --dark-2:     #ffe0ef;
+  --dark-3:     #ffd0e8;
+  --panel:      rgba(255,110,180,0.07);
+  --text:       #2a001a;
+  --text-dim:   #7a4060;
+  --border:     rgba(255,45,120,0.3);
+  background:   #fff0f7;
+}
+body.light-mode nav { background: rgba(255,240,247,0.92); }
+body.light-mode footer { border-color: rgba(255,45,120,0.2); }
+</style>
+
+</body>
+</html>
